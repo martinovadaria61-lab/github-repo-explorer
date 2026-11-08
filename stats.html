@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Статистика збережених репозиторіїв</h1>
+{% set s = stats.summary %}
+<div class="row g-3 mb-4">
+  {% for label, value in [('Репозиторіїв', s.total), ('Усього зірок', s.total_stars), ('Середня кількість зірок', s.avg_stars), ('Усього форків', s.total_forks)] %}
+  <div class="col-6 col-md-3"><div class="card text-center"><div class="card-body">
+    <div class="fs-3">{{ value|num }}</div><div class="text-muted small">{{ label }}</div></div></div></div>
+  {% endfor %}
+</div>
+{% if stats.top_repo %}
+<p>Найпопулярніший: <a href="{{ url_for('saved_detail', repo_id=stats.top_repo.id) }}">{{ stats.top_repo.full_name }}</a>
+   (&#9733; {{ stats.top_repo.stars|num }})</p>
+<h2 class="h5">Розподіл за мовами</h2>
+<table class="table bg-white w-auto">
+  <thead><tr><th>Мова</th><th>Репозиторіїв</th><th>Зірок</th></tr></thead>
+  <tbody>{% for l in stats.by_language %}<tr><td>{{ l.language }}</td><td>{{ l.repos }}</td><td>{{ l.stars|num }}</td></tr>{% endfor %}</tbody>
+</table>
+{% else %}
+<div class="alert alert-info">У базі ще немає записів.</div>
+{% endif %}
+{% endblock %}

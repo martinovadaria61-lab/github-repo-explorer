@@ -1,0 +1,31 @@
+{% macro pager(endpoint, pg, qargs) %}
+{% if pg.pages > 1 %}
+<nav>
+  <ul class="pagination justify-content-center">
+    <li class="page-item {{ '' if pg.has_prev else 'disabled' }}">
+      <a class="page-link" href="{{ url_for(endpoint, page=pg.page - 1, **qargs) }}">&laquo;</a>
+    </li>
+    <li class="page-item disabled"><span class="page-link">{{ pg.page }} / {{ pg.pages }}</span></li>
+    <li class="page-item {{ '' if pg.has_next else 'disabled' }}">
+      <a class="page-link" href="{{ url_for(endpoint, page=pg.page + 1, **qargs) }}">&raquo;</a>
+    </li>
+  </ul>
+</nav>
+{% endif %}
+{% endmacro %}
+
+{% macro save_form(r, next_url) %}
+<form method="post" action="{{ url_for('save') }}" class="d-inline">
+  <input type="hidden" name="github_id" value="{{ r.github_id }}">
+  <input type="hidden" name="full_name" value="{{ r.full_name }}">
+  <input type="hidden" name="description" value="{{ r.description or '' }}">
+  <input type="hidden" name="language" value="{{ r.language or '' }}">
+  <input type="hidden" name="stars" value="{{ r.stars }}">
+  <input type="hidden" name="forks" value="{{ r.forks }}">
+  <input type="hidden" name="html_url" value="{{ r.html_url }}">
+  <input type="hidden" name="avatar_url" value="{{ r.avatar_url or '' }}">
+  <input type="hidden" name="updated_at" value="{{ r.updated_at or '' }}">
+  <input type="hidden" name="next" value="{{ next_url }}">
+  <button class="btn btn-sm btn-success">Зберегти</button>
+</form>
+{% endmacro %}

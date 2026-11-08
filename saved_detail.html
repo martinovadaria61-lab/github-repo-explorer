@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ repo.full_name }}{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h1 class="h3">{{ repo.full_name }}</h1>
+    <p class="lead">{{ repo.description or 'Опис відсутній' }}</p>
+    <table class="table table-sm w-auto">
+      <tr><th>Мова</th><td>{{ repo.language or '—' }}</td></tr>
+      <tr><th>Зірки</th><td>{{ repo.stars|num }}</td></tr>
+      <tr><th>Форки</th><td>{{ repo.forks|num }}</td></tr>
+      <tr><th>Оновлено на GitHub</th><td>{{ repo.updated_at|date }}</td></tr>
+      <tr><th>Збережено</th><td>{{ repo.saved_at }}</td></tr>
+      <tr><th>Нотатки</th><td>{{ repo.notes or '—' }}</td></tr>
+    </table>
+    <a class="btn btn-outline-dark btn-sm" href="{{ repo.html_url }}" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('saved_edit', repo_id=repo.id) }}">Редагувати</a>
+    <a class="btn btn-link btn-sm" href="{{ url_for('saved') }}">До списку</a>
+  </div>
+</div>
+{% endblock %}

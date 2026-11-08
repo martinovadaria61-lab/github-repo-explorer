@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% from "_macros.html" import pager %}
+{% block title %}Збережені репозиторії{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Збережені репозиторії ({{ pg.total }})</h1>
+<form method="get" class="card card-body mb-3">
+  <div class="row g-2">
+    <div class="col-md-3"><input class="form-control" name="q" value="{{ form.q }}" placeholder="Пошук за назвою/описом"></div>
+    <div class="col-md-2">
+      <select class="form-select" name="language">
+        <option value="">Усі мови</option>
+        {% for l in languages %}<option value="{{ l }}" {{ 'selected' if form.language == l }}>{{ l }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2"><input class="form-control" type="number" min="0" name="min_stars" value="{{ form.min_stars }}" placeholder="Мін. зірок"></div>
+    <div class="col-md-2">
+      <select class="form-select" name="sort">
+        {% for key, label in [('saved','За датою'),('stars','За зірками'),('forks','За форками'),('name','За назвою'),('updated','За оновленням')] %}
+          <option value="{{ key }}" {{ 'selected' if form.sort == key }}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-1">
+      <select class="form-select" name="order">
+        <option value="desc" {{ 'selected' if form.order != 'asc' }}>&darr;</option>
+        <option value="asc" {{ 'selected' if form.order == 'asc' }}>&uarr;</option>
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-primary w-100">Застосувати</button></div>
+  </div>
+</form>
+
+{% if not repos %}
+  <div class="alert alert-info">Збережених репозиторіїв за цими умовами немає.</div>
+{% else %}
+<div class="table-responsive">
+<table class="table table-hover align-middle bg-white">
+  <thead><tr><th>Репозиторій</th><th>Мова</th><th>&#9733;</th><th>Форки</th><th>Оновлено</th><th></th></tr></thead>
+  <tbody>
+  {% for r in repos %}
+    <tr>
+      <td><a href="{{ url_for('saved_detail', repo_id=r.id) }}">{{ r.full_name }}</a>
+          <div class="small text-muted">{{ (r.description or '')[:90] }}</div></td>
+      <td>{{ r.language or '—' }}</td>
+      <td>{{ r.stars|num }}</td>
+      <td>{{ r.forks|num }}</td>
+      <td>{{ r.updated_at|date }}</td>
+      <td class="text-nowrap">
+        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('saved_edit', repo_id=r.id) }}">Редагувати</a>
+        <form class="d-inline" method="post" action="{{ url_for('saved_delete', repo_id=r.id) }}"
+              onsubmit="return confirm('Видалити запис?');">
+          <button class="btn btn-sm btn-outline-danger">Видалити</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{{ pager('saved', pg, qargs) }}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_macros.html" import save_form %}
+{% block title %}{{ repo.full_name }}{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="d-flex gap-3 align-items-center mb-3">
+      <img class="avatar" src="{{ repo.avatar_url }}" alt="">
+      <h1 class="h3 mb-0">{{ repo.full_name }}</h1>
+    </div>
+    <p class="lead">{{ repo.description or 'Опис відсутній' }}</p>
+    <table class="table table-sm w-auto">
+      <tr><th>Мова</th><td>{{ repo.language or '—' }}</td></tr>
+      <tr><th>Зірки</th><td>{{ repo.stars|num }}</td></tr>
+      <tr><th>Форки</th><td>{{ repo.forks|num }}</td></tr>
+      <tr><th>Відкриті issues</th><td>{{ repo.open_issues|num }}</td></tr>
+      <tr><th>Спостерігачі</th><td>{{ repo.watchers|num if repo.watchers is not none else '—' }}</td></tr>
+      <tr><th>Ліцензія</th><td>{{ repo.license or '—' }}</td></tr>
+      <tr><th>Створено</th><td>{{ repo.created_at|date }}</td></tr>
+      <tr><th>Оновлено</th><td>{{ repo.updated_at|date }}</td></tr>
+    </table>
+    {% if repo.topics %}
+      <p>{% for t in repo.topics %}<span class="badge text-bg-light border me-1">{{ t }}</span>{% endfor %}</p>
+    {% endif %}
+    <a class="btn btn-outline-dark btn-sm" href="{{ repo.html_url }}" target="_blank" rel="noopener">Відкрити на GitHub</a>
+    {% if saved %}
+      <span class="badge text-bg-secondary ms-2">Збережено</span>
+    {% else %}
+      {{ save_form(repo, request.path) }}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

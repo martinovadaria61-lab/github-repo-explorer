@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h1 class="mb-3">Пошук репозиторіїв GitHub</h1>
+    <form action="{{ url_for('search') }}" method="get" class="card card-body shadow-sm">
+      <div class="mb-3">
+        <label class="form-label" for="q">Пошуковий запит</label>
+        <input class="form-control" id="q" name="q" value="{{ form.q }}" placeholder="наприклад: flask, web scraper">
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label" for="language">Мова програмування</label>
+          <input class="form-control" id="language" name="language" value="{{ form.language }}" placeholder="Python, JavaScript...">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="sort">Сортування</label>
+          <select class="form-select" id="sort" name="sort">
+            {% for value, label in [('stars','За зірками'),('forks','За форками'),('updated','За оновленням'),('best-match','Найкращий збіг')] %}
+              <option value="{{ value }}" {{ 'selected' if form.sort == value }}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary">Шукати</button>
+    </form>
+
+    {% if recent %}
+    <div class="mt-4">
+      <h2 class="h6 text-muted">Останні запити</h2>
+      {% for r in recent %}
+        <a class="btn btn-sm btn-outline-secondary me-1 mb-1"
+           href="{{ url_for('search', q=r.query, language=r.language or '') }}">{{ r.query }}{% if r.language %} · {{ r.language }}{% endif %}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Редагування{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Редагування: {{ repo.full_name }}</h1>
+<form method="post" class="card card-body" style="max-width: 640px">
+  <div class="mb-3"><label class="form-label" for="description">Опис</label>
+    <textarea class="form-control" id="description" name="description" rows="3">{{ values['description'] or '' }}</textarea></div>
+  <div class="mb-3"><label class="form-label" for="language">Мова</label>
+    <input class="form-control" id="language" name="language" value="{{ values['language'] or '' }}"></div>
+  <div class="mb-3"><label class="form-label" for="notes">Власні нотатки</label>
+    <textarea class="form-control" id="notes" name="notes" rows="3">{{ values['notes'] or '' }}</textarea></div>
+  <div>
+    <button class="btn btn-primary">Зберегти</button>
+    <a class="btn btn-link" href="{{ url_for('saved_detail', repo_id=repo.id) }}">Скасувати</a>
+  </div>
+</form>
+{% endblock %}

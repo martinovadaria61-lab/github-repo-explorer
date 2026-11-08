@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Історія пошуку{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">Історія пошукових запитів</h1>
+  {% if items %}
+  <form method="post" action="{{ url_for('history_clear') }}"><button class="btn btn-sm btn-outline-danger">Очистити</button></form>
+  {% endif %}
+</div>
+{% if not items %}
+  <div class="alert alert-info">Історія порожня.</div>
+{% else %}
+<table class="table bg-white">
+  <thead><tr><th>Запит</th><th>Мова</th><th>Знайдено</th><th>Час</th><th></th></tr></thead>
+  <tbody>
+  {% for h in items %}
+    <tr><td>{{ h.query }}</td><td>{{ h.language or '—' }}</td><td>{{ h.results_count|num }}</td><td>{{ h.searched_at }}</td>
+        <td><a class="btn btn-sm btn-outline-primary" href="{{ url_for('search', q=h.query, language=h.language or '') }}">Повторити</a></td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}
